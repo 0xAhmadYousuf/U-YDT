@@ -41,7 +41,7 @@ U-YDT (YouTube Downloader Tool) can be installed in two ways: manual installatio
    pip install -r requirements.txt
    ```
 - #### Then you will be able to play with it like below :}
-  ![U-TDT_screenshot1](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/389fc7fa-6f6f-4753-898c-e48aa614790c)
+  ![image](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/84ebb29c-fdd4-49b7-ae09-ef15e03d2e78)
 
 
 
