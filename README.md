@@ -1,14 +1,6 @@
-![Logo]([./img/V2Mp3_Logo.png](https://raw.githubusercontent.com/0xAhmadYousuf/DB/main/UYDT_BANNER.jpg))
-
 <h1 align="center">
   <img src="https://raw.githubusercontent.com/0xAhmadYousuf/DB/main/UYDT_BANNER.jpg">
 </h1>
-
-
-
-
-
-
 
 # U-YDT (YouTube Downloader Tool)
 
