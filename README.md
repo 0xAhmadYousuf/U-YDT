@@ -1,6 +1,4 @@
-<h1 align="center">
-  <img src="https://raw.githubusercontent.com/0xAhmadYousuf/DB/main/UYDT_BANNER.jpg">
-</h1>
+![Style](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/b778f318-7e37-4b8d-b63b-60d0f6ec17db)
 
 # U-YDT (YouTube Downloader Tool)
 
