@@ -1,4 +1,10 @@
-![U-YFT Banner](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/60224717-966f-4e00-9ddb-358327f6879b)
+
+<!-- MANPAGE: BEGIN EXCLUDED SECTION -->
+<div align="center">
+[![U-YFT Banner](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/60224717-966f-4e00-9ddb-358327f6879b))(#readme)
+</div>
+<!-- MANPAGE: END EXCLUDED SECTION -->
+
 
 # U-YDT (YouTube Downloader Tool)
 
