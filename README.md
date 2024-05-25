@@ -24,6 +24,27 @@ U-YDT (YouTube Downloader Tool) is a command-line tool that allows users to down
 
 This guide will direct you to detailed instructions on how to perform specific tasks related to U-YDT. For comprehensive help on each topic, please refer to the respective sections in `help_guid.md`.
 
+
+## Alternative Methods
+
+### Alternative Method 1: Using SnapTube
+
+For detailed instructions on downloading YouTube playlists using SnapTube on your PC, refer to the guide below:
+
+- [PC SnapTube Playlist Downloader Guide](https://github.com/0xAhmadYousuf/U-YDT/blob/main/Alternative.1.md)
+
+![Copy of u-ydt](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/9ac273ec-d0ce-4a7b-9110-c5ea9343c244)
+
+### Alternative Method 2: Using yt.Unkn0wn2603.com
+
+For detailed instructions on downloading YouTube videos using the custom website yt.Unkn0wn2603.com, refer to the guide below:
+
+- [yt.Unkn0wn2603.com Downloader Guide](https://github.com/0xAhmadYousuf/U-YDT/blob/main/Alternative.2.md)
+
+![screencapture-yt-unkn0wn2603-2024-05-26-04_15_44](https://github.com/0xAhmadYousuf/U-YDT/assets/139548576/50baf624-6eb5-4cfe-817f-134770220ef0)
+
+
+
 ### Topics Covered
 
 1. [How to Get YouTube Channel ID](#how-to-get-youtube-channel-id)
