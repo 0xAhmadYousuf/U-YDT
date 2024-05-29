@@ -1,30 +1,21 @@
-"""##########################################################################################################################
-#############################################################################################################################
-#############################################################################################################################
-#######                                                                                                               #######
-#######   .oooooo.   ooooooooo.   ooooooooooooo ooooo ooo        ooooo ooooo  oooooooooooo oooooooooooo oooooooooo.   #######
-#######  d8P'  `Y8b  `888   `Y88. 8'   888   `8 `888' `88.       .888' `888' d'""""""d888' `888'     `8 `888'   `Y8b  #######
-####### 888      888  888   .d88'      888       888   888b     d'888   888        .888P    888          888      888 #######
-####### 888      888  888ooo88P'       888       888   8 Y88. .P  888   888       d888'     888oooo8     888      888 #######
-####### 888      888  888              888       888   8  `888'   888   888     .888P       888    "     888      888 #######
-####### `88b    d88'  888              888       888   8    Y     888   888    d888'    .P  888       o  888     d88' #######
-#######  `Y8bood8P'  o888o            o888o     o888o o8o        o888o o888o .8888888888P  o888ooooood8 o888bood8P'   #######
-#######                                                                                                               #######
-#############################################################################################################################
-#############################################################################################################################
-#############################################################################################################################"""
-
+import re
 import os
 import json
+import time
 import requests
+import warnings
 import concurrent.futures
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Iterable
 from termcolor import colored
 from urllib.error import HTTPError
 from pytube import YouTube, Playlist
+# from termcolor import colored as clrd
+from http.client import IncompleteRead
 from pytube.exceptions import PytubeError
-import warnings
+from typing import Any, Dict, List, Optional, Tuple
 warnings.filterwarnings("ignore", category=UserWarning)
+
+
 BASE_DIR: str = 'U-YDT'
 LOG_FILE_PATH: str = f'{BASE_DIR}/log/log.json'
 def banner1() -> None:
@@ -48,7 +39,7 @@ def banner1() -> None:
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⠀⢸⡧⠀⠀⠀⢀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠨⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⠨⣿⣿⡂⠀⠀⠀⠀⠀⠀⠀⣿⣿⡃⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⢳⠨⡊⢎⢎⢎⢄⢕⢜⢜⢜⢜⢜⢜⢜⠜", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⣇⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⣿⣿⠅⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⢸⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡅⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠱⡨⠢⡑⢕⢕⢕⢕⢕⢕⢕⢕⢕⠑", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣿⡄⠀⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠅⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⢀⣰⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡅⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠈⠪⢐⢑⠔⡑⢜⢐⠕⡘⠔", 'light_cyan', 'on_black', ['bold']))
-    print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠳⠲⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠓⠚⠚⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠂⠑⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀[ V-U1.0.1 ]", 'light_cyan', 'on_black', ['bold']))
+    print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠳⠲⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠓⠚⠚⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠂⠑⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀[ V-U1.0.3 ]", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭| By Unkn0wn2603 |⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭", "green", 'on_black'))
     print("\n")
 def banner2() -> None:
@@ -70,7 +61,7 @@ def banner2() -> None:
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣶⡿⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⢘⣿⣷⡂⠀⠃⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀    ⠘⣆⠣⡣⡳⣕⠱⡱⡱⣏⢷⠽⣝⢞⠊
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⣿⣿⡃⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⢐⣿⣿⡂⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀     ⠘⢜⠌⡎⢎⢇⢯⢺⢕⡝⣝⢜⠊
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⣿⣿⡂⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⣼⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀       ⠑⢜⢌⠪⡊⢎⠪⡊⠆⠁
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣿⣿⣂⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⣀⣀⣤⡾⠿⠃⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⠀⠀⠀          ⠁⠁⠁⠁        Version : U1.0.1
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣿⣿⣂⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⣀⣀⣤⡾⠿⠃⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⠀⠀⠀          ⠁⠁⠁⠁        Version : U1.0.3
           """, "cyan", attrs=['bold']))
     print("\n")
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛", "green", 'on_black', attrs=['bold']))
@@ -135,14 +126,26 @@ def load_json(file_path: str) -> Optional[Any]:
         with open(file_path, 'r') as f:
             return json.load(f)
     return None
+
 def save_json(file_path: str, data: Any) -> None:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, 'w') as f:
-        json.dump(data, f, indent=4)
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+        
 def update_log(log_file: str, log_data: Dict[str, Any]) -> None:
     data: List[Dict[str, Any]] = load_json(log_file) or []
     data.append(log_data)
     save_json(log_file, data)
+
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
+
 def download_single_video(video_url: str) -> None:
     banner()
     quality: str = quality_input()
@@ -180,25 +183,82 @@ def download_single_video(video_url: str) -> None:
             print(colored(f'        [!] No stream found for {yt.title} with quality {quality}', color="red", attrs=["bold"]))
     except Exception as e:
         print(colored(f'        [!] Failed to download {video_url}: {e}', color="red", attrs=["bold"]))
-def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int, log_file: str, log_data: Dict[str, List[str]], quality: str) -> None:
-    try:
-        yt: YouTube = YouTube(video.watch_url)
-        print(colored(f'        [i] Downloading video ({idx}/{total_videos}): {video.title} ({quality})', color="blue", attrs=["bold"]))
-        stream: Optional[Any] = select_stream(yt, quality)
-        if stream:
-            stream.download(output_path=folder)
-            print(colored(f'        [i] Download complete: {video.title}', color="green", attrs=["bold"]))
-            log_data['completed'].append(video.watch_url)
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
+
+def sanitize_filename(filename: str) -> str:
+    # Remove or replace characters that are invalid in filenames
+    filename = re.sub(r'[<>:"/\\|?*]', '', filename)
+    # Optionally, truncate the filename to a reasonable length
+    return filename[:200]
+
+def file_exists(folder: str, filename: str, expected_size: int) -> bool:
+    file_path = os.path.join(folder, filename)
+    if os.path.exists(file_path):
+        if os.path.getsize(file_path) == expected_size:
+            return True
         else:
-            print(colored(f'        [!] No stream found for {video.title} with quality {quality}', color="red", attrs=["bold"]))
-            if video.watch_url not in log_data['not_completed']:
-                log_data['not_completed'].append(video.watch_url)
-        save_json(log_file, log_data)
-    except Exception as e:
-        print(colored(f'        [!] Failed to download {video.title}: {e}', color="red", attrs=["bold"]))
-        if video.watch_url not in log_data['not_completed']:
-            log_data['not_completed'].append(video.watch_url)
-        save_json(log_file, log_data)
+            print(colored(f'        [!] File {filename} exists but size does not match. It will be overwritten.', color="yellow", attrs=["bold"]))
+    return False
+
+def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int, log_file: str, log_data: Dict[str, List[str]], quality: str, max_retries: int = 3) -> None:
+    for attempt in range(max_retries):
+        try:
+            yt: YouTube = YouTube(video.watch_url)
+            print(colored(f'        [i] Downloading video ({idx}/{total_videos}): {video.title} ({quality})', color="blue", attrs=["bold"]))
+            stream: Optional[Any] = select_stream(yt, quality)
+            if stream:
+                # Sanitize the filename to avoid invalid characters and truncation issues
+                safe_title = sanitize_filename(video.title)
+                filename = f'{idx:03d} - {safe_title}.mp4'
+                file_path = os.path.join(folder, filename)
+                
+                # Check if file already exists with the same title and size
+                if file_exists(folder, filename, stream.filesize):
+                    print(colored(f'        [i] File already exists: {filename}', color="green", attrs=["bold"]))
+                    log_data['completed'].append(video.watch_url)
+                    save_json(log_file, log_data)
+                    return
+                
+                # Download the video
+                stream.download(output_path=folder, filename=filename)
+                print(colored(f'        [i] Download complete: {video.title}', color="green", attrs=["bold"]))
+                log_data['completed'].append(video.watch_url)
+                save_json(log_file, log_data)
+                return
+            else:
+                print(colored(f'        [!] No stream found for {video.title} with quality {quality}', color="red", attrs=["bold"]))
+                if video.watch_url not in log_data['not_completed']:
+                    log_data['not_completed'].append(video.watch_url)
+                save_json(log_file, log_data)
+                return
+        except IncompleteRead as e:
+            print(colored(f'        [!] IncompleteRead error on attempt {attempt + 1} for {video.title}: {e}', color="yellow", attrs=["bold"]))
+            if attempt < max_retries - 1:
+                time.sleep(2)  # Wait a bit before retrying
+        except Exception as e:
+            print(colored(f'        [!] Failed to download {video.title} on attempt {attempt + 1}: {e}', color="red", attrs=["bold"]))
+            if attempt < max_retries - 1:
+                time.sleep(2)  # Wait a bit before retrying
+    # If all attempts fail, log the failure
+    if video.watch_url not in log_data['not_completed']:
+        log_data['not_completed'].append(video.watch_url)
+    save_json(log_file, log_data)
+
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
 def playlist_video_exists(video: Any, log_data: Dict[str, List[str]]) -> bool:
     return video.watch_url in log_data['completed']
 def playlist_create_directories(playlist_title: str, quality: str) -> Tuple[str, str, str]:
@@ -217,6 +277,9 @@ def playlist_get_video_links(playlist_url: str, links_file: str) -> List[str]:
     video_urls: List[str] = [video.watch_url for video in playlist.videos]
     save_json(links_file, {'video_urls': video_urls})
     return video_urls
+
+
+
 def download_playlist_videos(playlist_url: str) -> None:
     banner()
     playlist: Playlist = Playlist(playlist_url)
@@ -236,6 +299,17 @@ def download_playlist_videos(playlist_url: str) -> None:
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
+
+
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
+
 def channel_load_log(log_file: str) -> Dict[str, List[str]]:
     if os.path.exists(log_file):
         with open(log_file, 'r') as f:
@@ -330,6 +404,16 @@ def download_channel(api_key: str, channel_id: str, channel_name: str) -> None:
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
+    
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
+
 def normalize_video_url(url: str) -> str:
     base_url: str = 'https://www.youtube.com/watch?v='
     if len(url) == 11:
@@ -388,6 +472,16 @@ def load_log() -> Dict[str, Any]:
     return load_json(LOG_FILE_PATH) or {}
 def save_log(log: Dict[str, Any]) -> None:
     save_json(LOG_FILE_PATH, log)
+
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
+
 def start_u_ydt() -> None:
     log: Dict[str, Any] = load_log()
     print(colored("        [i] What would you like to download?", 'blue'))
