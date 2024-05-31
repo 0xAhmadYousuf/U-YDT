@@ -19,7 +19,6 @@ from urllib.error import HTTPError
 from http.client import IncompleteRead
 from pytube.exceptions import PytubeError
 warnings.filterwarnings("ignore", category=UserWarning)
-
 BASE_DIR: str = 'U-YDT'
 LOG_FILE_PATH: str = f'{BASE_DIR}/log/log.json'
 def banner1() -> None:
@@ -46,7 +45,6 @@ def banner1() -> None:
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠳⠲⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠓⠚⠚⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠂⠑⠀⠁⠀⠀⠀Version : U.1.0.6", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭| By Unkn0wn2603 |⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭", "green", 'on_black'))
     print("\n")
-
 def banner2() -> None:
     print(colored("""
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⠀⠀⣤⡀⠀⠀⠀⠀⠀              ⢰⡄  ⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣤⣄⣀⡀
@@ -82,14 +80,12 @@ def banner() -> None:
         banner2()
     else:
         banner1()
-
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def select_stream(yt: YouTube, quality: str) -> Optional[Any]:
     filters: Dict[str, Any] = {
         "audio": lambda: yt.streams.filter(only_audio=True).order_by('abr').desc().first(),
@@ -139,17 +135,14 @@ def load_json(file_path: str) -> Optional[Any]:
         with open(file_path, 'r') as f:
             return json.load(f)
     return None
-
 def save_json(file_path: str, data: Any) -> None:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
-        
 def update_log(log_file: str, log_data: Dict[str, Any]) -> None:
     data: List[Dict[str, Any]] = load_json(log_file) or []
     data.append(log_data)
     save_json(log_file, data)
-
 def sanitize_title(filename: str) -> str:
     # Remove or replace characters that are invalid in names
     filename = re.sub(r'[<>:"/\\|?*]', '', filename)
@@ -161,14 +154,12 @@ def sanitize_title(filename: str) -> str:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 # Flags for detailed output
 SERVER_PRINT = True  # Print server details
 CLIENT_PRINT = True  # Print client details
 LATENCY_PRINT = True  # Print latency details
 DOWNLOAD_PRINT = True  # Print download speed
 UPLOAD_PRINT = True  # Print upload speed
-
 def print_bold_line(title=None, status=None, title_color=None, status_color=None, title_on_color=None, status_on_color=None, oncolor=[]):
     """Helper function to print title and status in bold and optionally colored messages on the same line."""
     oncolor.append('bold')
@@ -199,68 +190,66 @@ def speed_test():
     if CLIENT_PRINT:
         client_info = results['client']
         print_bold_line()
-        print_bold_line("        --- [ CLIENT SIDE INFORMATIONS ] ---", title_color='yellow')
-        print_bold_line("        [c] Client IP        ", client_info['ip'], 'yellow', 'yellow')
-        print_bold_line("        [c] Client ISP       ", client_info['isp'], 'yellow', 'yellow')
-        print_bold_line("        [c] Client Country   ", client_info['country'], 'yellow', 'yellow')
-        print_bold_line("        [c] Client Latitude  ", client_info['lat'], 'yellow', 'yellow')
-        print_bold_line("        [c] Client Longitude ", client_info['lon'], 'yellow', 'yellow')
+        print_bold_line("        ---------------------------------- [ CLIENT SIDE INFORMATIONS ] ----------------------------------", title_color='yellow')
+        print_bold_line("         [c] Client IP ----------------------------------------- ", client_info['ip'], 'yellow', 'yellow')
+        print_bold_line("         [c] Client ISP ---------------------------------------- ", client_info['isp'], 'yellow', 'yellow')
+        print_bold_line("         [c] Client Country ------------------------------------ ", client_info['country'], 'yellow', 'yellow')
+        print_bold_line("         [c] Client Latitude ----------------------------------- ", client_info['lat'], 'yellow', 'yellow')
+        print_bold_line("         [c] Client Longitude ---------------------------------- ", client_info['lon'], 'yellow', 'yellow')
     if SERVER_PRINT:
         print_bold_line()
-        print_bold_line("        --- [ SERVER SIDE INFORMATIONS ] ---", title_color='blue')
-        print_bold_line("        [s] Server ID        ", best_server['id'], 'blue', 'blue')
-        print_bold_line("        [s] Server Host      ", best_server['host'], 'blue', 'blue')
-        print_bold_line("        [s] Server Sponsor   ", best_server['sponsor'], 'blue', 'blue')
-        print_bold_line("        [s] Server Distance  ", f"{best_server['d']:.2f} km", 'blue', 'blue')
-        print_bold_line("        [s] Server Location  ", f"{best_server['name']}, {best_server['country']}", 'blue', 'blue')
-        print_bold_line("        [s] Server Latitude  ", best_server['lat'], 'blue', 'blue')
-        print_bold_line("        [s] Server Longitude ", best_server['lon'], 'blue', 'blue')
+        print_bold_line("        ---------------------------------- [ SERVER SIDE INFORMATIONS ] ----------------------------------", title_color='blue')
+        print_bold_line("         [s] Server ID ----------------------------------------- ", best_server['id'], 'blue', 'blue')
+        print_bold_line("         [s] Server Host --------------------------------------- ", best_server['host'], 'blue', 'blue')
+        print_bold_line("         [s] Server Sponsor ------------------------------------ ", best_server['sponsor'], 'blue', 'blue')
+        print_bold_line("         [s] Server Distance ----------------------------------- ", f"{best_server['d']:.2f} km", 'blue', 'blue')
+        print_bold_line("         [s] Server Location ----------------------------------- ", f"{best_server['name']}, {best_server['country']}", 'blue', 'blue')
+        print_bold_line("         [s] Server Latitude ----------------------------------- ", best_server['lat'], 'blue', 'blue')
+        print_bold_line("         [s] Server Longitude ---------------------------------- ", best_server['lon'], 'blue', 'blue')
     speedtest.download()
     results = speedtest.results.dict()
     if DOWNLOAD_PRINT:
         print_bold_line()
-        print_bold_line("        -- [ SPEED RELATED INFORMATIONS ] --", title_color='cyan')
+        print_bold_line("        --------------------------------- [ SPEED RELATED INFORMATIONS ] ---------------------------------", title_color='cyan')
         download_speed = results['download'] / 1e6  # Convert to Mbps
         dl_speed = f"{download_speed:.4f}"  # Format to 4 decimal places
-        if   download_speed > 90: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'green')
-        elif download_speed > 70: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'blue')
-        elif download_speed > 45: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_yellow')
-        elif download_speed > 30: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'yellow')
-        elif download_speed > 20: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_magenta')
-        elif download_speed > 15: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'magenta')
-        elif download_speed > 10: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_red')
-        else:                     print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'red')
+        if   download_speed > 90: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'green')
+        elif download_speed > 70: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'blue')
+        elif download_speed > 45: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'light_yellow')
+        elif download_speed > 30: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'yellow')
+        elif download_speed > 20: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'light_magenta')
+        elif download_speed > 15: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'magenta')
+        elif download_speed > 10: print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'light_red')
+        else:                     print_bold_line("         [d] Download Speed ------------------------------------ ", f"{dl_speed} Mbps", 'cyan', 'red')
     speedtest.upload()
     results = speedtest.results.dict()
     if UPLOAD_PRINT:
         upload_speed = results['upload'] / 1e6  # Convert to Mbps
         up_speed = f"{upload_speed:.4f}"  # Format to 4 decimal places
-        if   upload_speed > 90: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'green')
-        elif upload_speed > 70: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'blue')
-        elif upload_speed > 45: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_yellow')
-        elif upload_speed > 30: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'yellow')
-        elif upload_speed > 20: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_magenta')
-        elif upload_speed > 15: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'magenta')
-        elif upload_speed > 10: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_red')
-        else:                   print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'red')
+        if   upload_speed > 90: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'green')
+        elif upload_speed > 70: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'blue')
+        elif upload_speed > 45: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'light_yellow')
+        elif upload_speed > 30: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'yellow')
+        elif upload_speed > 20: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'light_magenta')
+        elif upload_speed > 15: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'magenta')
+        elif upload_speed > 10: print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'light_red')
+        else:                   print_bold_line("         [u] Upload Speed -------------------------------------- ", f"{up_speed} Mbps", 'cyan', 'red')
     if LATENCY_PRINT:
         ping = results['ping']
-        if ping < 10:   print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'green')
-        elif ping < 50: print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'blue')
-        elif ping < 100:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_yellow')
-        elif ping < 300:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'yellow')
-        elif ping < 500:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_magenta')
-        elif ping < 700:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'magenta')
-        elif ping < 900:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_red')
-        else:           print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'red')
-
+        if ping < 10:   print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'green')
+        elif ping < 50: print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'blue')
+        elif ping < 100:print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'light_yellow')
+        elif ping < 300:print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'yellow')
+        elif ping < 500:print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'light_magenta')
+        elif ping < 700:print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'magenta')
+        elif ping < 900:print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'light_red')
+        else:           print_bold_line("         [p] Latency ------------------------------------------- ", f"{ping:.4f} ms", 'cyan', 'red')
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def download_single_video(video_url: str) -> None:
     banner()
     quality: str = quality_input()
@@ -298,14 +287,12 @@ def download_single_video(video_url: str) -> None:
             print(colored(f'        [!] No stream found for {yt.title} with quality {quality}', color="red", attrs=["bold"]))
     except Exception as e:
         print(colored(f'        [!] Failed to download {video_url}: {e}', color="red", attrs=["bold"]))
-
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def file_exists(folder: str, filename: str, expected_size: int) -> bool:
     file_path = os.path.join(folder, filename)
     if os.path.exists(file_path):
@@ -355,14 +342,12 @@ def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int
     if video.watch_url not in log_data['not_completed']:
         log_data['not_completed'].append(video.watch_url)
     save_json(log_file, log_data)
-
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def playlist_video_exists(video: Any, log_data: Dict[str, List[str]]) -> bool:
     return video.watch_url in log_data['completed']
 def playlist_create_directories(playlist_title: str, quality: str) -> Tuple[str, str, str]:
@@ -397,18 +382,16 @@ def download_playlist_videos(playlist_url: str) -> None:
         futures = [
             executor.submit(playlist_download_video, YouTube(video_url), quality_folder, idx, total_videos, log_file, log_data, quality)
             for idx, video_url in enumerate(video_urls, start=1) if not playlist_video_exists(YouTube(video_url), log_data)
-                ]
+        ]
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
-
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def channel_load_log(log_file: str) -> Dict[str, List[str]]:
     if os.path.exists(log_file):
         with open(log_file, 'r') as f:
@@ -504,14 +487,12 @@ def download_channel(api_key: str, channel_id: str, channel_name: str) -> None:
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
-
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def normalize_video_url(url: str) -> str:
     base_url: str = 'https://www.youtube.com/watch?v='
     if len(url) == 11:
@@ -571,14 +552,12 @@ def load_log() -> Dict[str, Any]:
     return load_json(LOG_FILE_PATH) or {}
 def save_log(log: Dict[str, Any]) -> None:
     save_json(LOG_FILE_PATH, log)
-    
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 def start_u_ydt() -> Literal[0, 9]:
     log: Dict[str, Any] = load_log()
     print(colored("        [i] What would you like to do ?", 'blue'))
