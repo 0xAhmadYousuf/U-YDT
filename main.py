@@ -4,17 +4,21 @@ import json
 import time
 import requests
 import warnings
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from st import Speedtest
 import concurrent.futures
-from typing import Iterable
+from pytube import YouTube
+from typing import Literal
+from typing import Optional
+from pytube import Playlist
 from termcolor import colored
 from urllib.error import HTTPError
-from pytube import YouTube, Playlist
-# from termcolor import colored as clrd
 from http.client import IncompleteRead
 from pytube.exceptions import PytubeError
-from typing import Any, Dict, List, Optional, Tuple
 warnings.filterwarnings("ignore", category=UserWarning)
-
 
 BASE_DIR: str = 'U-YDT'
 LOG_FILE_PATH: str = f'{BASE_DIR}/log/log.json'
@@ -39,9 +43,10 @@ def banner1() -> None:
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⠀⢸⡧⠀⠀⠀⢀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠨⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⠨⣿⣿⡂⠀⠀⠀⠀⠀⠀⠀⣿⣿⡃⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⢳⠨⡊⢎⢎⢎⢄⢕⢜⢜⢜⢜⢜⢜⢜⠜", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⣇⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⣿⣿⠅⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⠀⠀⢸⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡅⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠱⡨⠢⡑⢕⢕⢕⢕⢕⢕⢕⢕⢕⠑", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣿⡄⠀⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠅⠀⠀⠀⠀⠀⠀⠀⠀⢽⣿⡇⠀⠀⠀⢀⣰⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡅⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠈⠪⢐⢑⠔⡑⢜⢐⠕⡘⠔", 'light_cyan', 'on_black', ['bold']))
-    print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠳⠲⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠓⠚⠚⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠂⠑⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀[ V-U-1.0.3 ]", 'light_cyan', 'on_black', ['bold']))
+    print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠳⠲⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠓⠚⠚⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠛⠓⠀⠀⠀", 'light_magenta', 'on_black', ['bold']) + colored("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠂⠑⠀⠁⠀⠀⠀Version : U.1.0.6", 'light_cyan', 'on_black', ['bold']))
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭| By Unkn0wn2603 |⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭⣭", "green", 'on_black'))
     print("\n")
+
 def banner2() -> None:
     print(colored("""
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⠀⠀⣤⡀⠀⠀⠀⠀⠀              ⢰⡄  ⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣤⣄⣀⡀
@@ -61,7 +66,7 @@ def banner2() -> None:
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣶⡿⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⢘⣿⣷⡂⠀⠃⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀    ⠘⣆⠣⡣⡳⣕⠱⡱⡱⣏⢷⠽⣝⢞⠊
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⣿⣿⡃⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⢐⣿⣿⡂⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀     ⠘⢜⠌⡎⢎⢇⢯⢺⢕⡝⣝⢜⠊
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⣿⣿⡂⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⣼⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀       ⠑⢜⢌⠪⡊⢎⠪⡊⠆⠁
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣿⣿⣂⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⣀⣀⣤⡾⠿⠃⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⠀⠀⠀          ⠁⠁⠁⠁        Version : U-1.0.3
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣿⣿⣂⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⣀⣀⣤⡾⠿⠃⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣇⠀⠀⠀          ⠁⠁⠁⠁        Version : U.1.0.6
           """, "cyan", attrs=['bold']))
     print("\n")
     print(colored("⠀⠀⠀⠀⠀⠀⠀⠀⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛", "green", 'on_black', attrs=['bold']))
@@ -77,6 +82,14 @@ def banner() -> None:
         banner2()
     else:
         banner1()
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
+
 def select_stream(yt: YouTube, quality: str) -> Optional[Any]:
     filters: Dict[str, Any] = {
         "audio": lambda: yt.streams.filter(only_audio=True).order_by('abr').desc().first(),
@@ -137,7 +150,11 @@ def update_log(log_file: str, log_data: Dict[str, Any]) -> None:
     data.append(log_data)
     save_json(log_file, data)
 
-
+def sanitize_title(filename: str) -> str:
+    # Remove or replace characters that are invalid in names
+    filename = re.sub(r'[<>:"/\\|?*]', '', filename)
+    # Optionally, truncate the filename to a reasonable length
+    return filename[:200]
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -145,6 +162,104 @@ def update_log(log_file: str, log_data: Dict[str, Any]) -> None:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
 
+# Flags for detailed output
+SERVER_PRINT = True  # Print server details
+CLIENT_PRINT = True  # Print client details
+LATENCY_PRINT = True  # Print latency details
+DOWNLOAD_PRINT = True  # Print download speed
+UPLOAD_PRINT = True  # Print upload speed
+
+def print_bold_line(title=None, status=None, title_color=None, status_color=None, title_on_color=None, status_on_color=None, oncolor=[]):
+    """Helper function to print title and status in bold and optionally colored messages on the same line."""
+    oncolor.append('bold')
+    if status==None:
+        if title==None:
+            print()
+        else:
+            print(colored(title, title_color, title_on_color, attrs=oncolor))
+    if status!=None:
+        if title!=None:
+            if title_color:
+                title = colored(title, title_color, title_on_color, attrs=oncolor)
+            else:
+                title = colored(title, attrs=oncolor)
+            if status_color:
+                status = colored(status, status_color, status_on_color, attrs=oncolor)
+            else:
+                status = colored(status, attrs=oncolor)
+            print(f"{title}: {status}")
+def speed_test():
+    banner()
+    # Creating an instance of Speedtest
+    speedtest = Speedtest()
+    # Perform the speed test
+    best_server = speedtest.get_best_server()
+    results = speedtest.results.dict()
+    # Print the results based on the flags
+    if CLIENT_PRINT:
+        client_info = results['client']
+        print_bold_line()
+        print_bold_line("        --- [ CLIENT SIDE INFORMATIONS ] ---", title_color='yellow')
+        print_bold_line("        [c] Client IP        ", client_info['ip'], 'yellow', 'yellow')
+        print_bold_line("        [c] Client ISP       ", client_info['isp'], 'yellow', 'yellow')
+        print_bold_line("        [c] Client Country   ", client_info['country'], 'yellow', 'yellow')
+        print_bold_line("        [c] Client Latitude  ", client_info['lat'], 'yellow', 'yellow')
+        print_bold_line("        [c] Client Longitude ", client_info['lon'], 'yellow', 'yellow')
+    if SERVER_PRINT:
+        print_bold_line()
+        print_bold_line("        --- [ SERVER SIDE INFORMATIONS ] ---", title_color='blue')
+        print_bold_line("        [s] Server ID        ", best_server['id'], 'blue', 'blue')
+        print_bold_line("        [s] Server Host      ", best_server['host'], 'blue', 'blue')
+        print_bold_line("        [s] Server Sponsor   ", best_server['sponsor'], 'blue', 'blue')
+        print_bold_line("        [s] Server Distance  ", f"{best_server['d']:.2f} km", 'blue', 'blue')
+        print_bold_line("        [s] Server Location  ", f"{best_server['name']}, {best_server['country']}", 'blue', 'blue')
+        print_bold_line("        [s] Server Latitude  ", best_server['lat'], 'blue', 'blue')
+        print_bold_line("        [s] Server Longitude ", best_server['lon'], 'blue', 'blue')
+    speedtest.download()
+    results = speedtest.results.dict()
+    if DOWNLOAD_PRINT:
+        print_bold_line()
+        print_bold_line("        -- [ SPEED RELATED INFORMATIONS ] --", title_color='cyan')
+        download_speed = results['download'] / 1e6  # Convert to Mbps
+        dl_speed = f"{download_speed:.4f}"  # Format to 4 decimal places
+        if   download_speed > 90: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'green')
+        elif download_speed > 70: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'blue')
+        elif download_speed > 45: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_yellow')
+        elif download_speed > 30: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'yellow')
+        elif download_speed > 20: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_magenta')
+        elif download_speed > 15: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'magenta')
+        elif download_speed > 10: print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'light_red')
+        else:                     print_bold_line("        [d] Download Speed   ", f"{dl_speed} Mbps", 'cyan', 'red')
+    speedtest.upload()
+    results = speedtest.results.dict()
+    if UPLOAD_PRINT:
+        upload_speed = results['upload'] / 1e6  # Convert to Mbps
+        up_speed = f"{upload_speed:.4f}"  # Format to 4 decimal places
+        if   upload_speed > 90: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'green')
+        elif upload_speed > 70: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'blue')
+        elif upload_speed > 45: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_yellow')
+        elif upload_speed > 30: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'yellow')
+        elif upload_speed > 20: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_magenta')
+        elif upload_speed > 15: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'magenta')
+        elif upload_speed > 10: print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'light_red')
+        else:                   print_bold_line("        [u] Upload Speed     ", f"{up_speed} Mbps", 'cyan', 'red')
+    if LATENCY_PRINT:
+        ping = results['ping']
+        if ping < 10:   print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'green')
+        elif ping < 50: print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'blue')
+        elif ping < 100:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_yellow')
+        elif ping < 300:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'yellow')
+        elif ping < 500:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_magenta')
+        elif ping < 700:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'magenta')
+        elif ping < 900:print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'light_red')
+        else:           print_bold_line("        [p] Latency          ", f"{ping:.4f} ms", 'cyan', 'red')
+
+"""################################################################################################################################################################
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+################################################################################################################################################################"""
 
 def download_single_video(video_url: str) -> None:
     banner()
@@ -191,13 +306,6 @@ def download_single_video(video_url: str) -> None:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
 
-
-def sanitize_filename(filename: str) -> str:
-    # Remove or replace characters that are invalid in filenames
-    filename = re.sub(r'[<>:"/\\|?*]', '', filename)
-    # Optionally, truncate the filename to a reasonable length
-    return filename[:200]
-
 def file_exists(folder: str, filename: str, expected_size: int) -> bool:
     file_path = os.path.join(folder, filename)
     if os.path.exists(file_path):
@@ -206,7 +314,6 @@ def file_exists(folder: str, filename: str, expected_size: int) -> bool:
         else:
             print(colored(f'        [!] File {filename} exists but size does not match. It will be overwritten.', color="yellow", attrs=["bold"]))
     return False
-
 def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int, log_file: str, log_data: Dict[str, List[str]], quality: str, max_retries: int = 3) -> None:
     for attempt in range(max_retries):
         try:
@@ -215,17 +322,15 @@ def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int
             stream: Optional[Any] = select_stream(yt, quality)
             if stream:
                 # Sanitize the filename to avoid invalid characters and truncation issues
-                safe_title = sanitize_filename(video.title)
+                safe_title = sanitize_title(video.title)
                 filename = f'{idx:03d} - {safe_title}.mp4'
                 file_path = os.path.join(folder, filename)
-                
                 # Check if file already exists with the same title and size
                 if file_exists(folder, filename, stream.filesize):
                     print(colored(f'        [i] File already exists: {filename}', color="green", attrs=["bold"]))
                     log_data['completed'].append(video.watch_url)
                     save_json(log_file, log_data)
                     return
-                
                 # Download the video
                 stream.download(output_path=folder, filename=filename)
                 print(colored(f'        [i] Download complete: {video.title}', color="green", attrs=["bold"]))
@@ -250,7 +355,6 @@ def playlist_download_video(video: Any, folder: str, idx: int, total_videos: int
     if video.watch_url not in log_data['not_completed']:
         log_data['not_completed'].append(video.watch_url)
     save_json(log_file, log_data)
-
 
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -277,15 +381,13 @@ def playlist_get_video_links(playlist_url: str, links_file: str) -> List[str]:
     video_urls: List[str] = [video.watch_url for video in playlist.videos]
     save_json(links_file, {'video_urls': video_urls})
     return video_urls
-
-
-
 def download_playlist_videos(playlist_url: str) -> None:
     banner()
     playlist: Playlist = Playlist(playlist_url)
-    print(colored(f'        [i] Downloading playlist: {playlist.title}', color="magenta", attrs=["bold"]))
+    safe_title = sanitize_title(playlist.title)
+    print(colored(f'        [i] Downloading playlist: {safe_title}', color="magenta", attrs=["bold"]))
     quality: str = quality_input()
-    playlist_folder, quality_folder, log_folder = playlist_create_directories(playlist.title, quality)
+    playlist_folder, quality_folder, log_folder = playlist_create_directories(safe_title, quality)
     links_file: str = os.path.join(log_folder, 'links.json')
     log_file: str = os.path.join(log_folder, f'{quality}.json')
     video_urls: List[str] = playlist_get_video_links(playlist_url, links_file)
@@ -295,12 +397,10 @@ def download_playlist_videos(playlist_url: str) -> None:
         futures = [
             executor.submit(playlist_download_video, YouTube(video_url), quality_folder, idx, total_videos, log_file, log_data, quality)
             for idx, video_url in enumerate(video_urls, start=1) if not playlist_video_exists(YouTube(video_url), log_data)
-        ]
+                ]
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
-
-
 
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -308,7 +408,6 @@ def download_playlist_videos(playlist_url: str) -> None:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 
 def channel_load_log(log_file: str) -> Dict[str, List[str]]:
     if os.path.exists(log_file):
@@ -370,6 +469,7 @@ def channel_video_exists(video_url: str, log_data: Dict[str, List[str]]) -> bool
     return video_url in log_data['completed']
 def download_channel(api_key: str, channel_id: str, channel_name: str) -> None:
     banner()
+    channel_name: str = sanitize_title(channel_name)
     video_urls: List[str] = channel_get_video_urls(api_key, channel_id, channel_name)
     log_folder: str = os.path.join(BASE_DIR, 'channels', channel_name, 'download_data')
     if not os.path.exists(log_folder):
@@ -404,7 +504,6 @@ def download_channel(api_key: str, channel_id: str, channel_name: str) -> None:
         for future in concurrent.futures.as_completed(futures):
             future.result()
     print(colored('        [i] All downloads complete!', 'green'))
-    
 
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -412,7 +511,6 @@ def download_channel(api_key: str, channel_id: str, channel_name: str) -> None:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
-
 
 def normalize_video_url(url: str) -> str:
     base_url: str = 'https://www.youtube.com/watch?v='
@@ -464,7 +562,8 @@ def normalize_playlist_url(url: str) -> str:
 def fetch_playlist_title(normalized_url: str) -> Optional[str]:
     try:
         playlist: Playlist = Playlist(normalized_url)
-        return playlist.title
+        safe_title = sanitize_title(playlist.title)
+        return safe_title
     except (PytubeError, HTTPError) as e:
         print(f"Failed to fetch playlist title: {e}")
         return None
@@ -472,8 +571,7 @@ def load_log() -> Dict[str, Any]:
     return load_json(LOG_FILE_PATH) or {}
 def save_log(log: Dict[str, Any]) -> None:
     save_json(LOG_FILE_PATH, log)
-
-
+    
 """################################################################################################################################################################
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -481,33 +579,41 @@ def save_log(log: Dict[str, Any]) -> None:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ################################################################################################################################################################"""
 
-
-def start_u_ydt() -> None:
+def start_u_ydt() -> Literal[0, 9]:
     log: Dict[str, Any] = load_log()
-    print(colored("        [i] What would you like to download?", 'blue'))
-    print(colored("        [1] Channel", 'cyan'))
-    print(colored("        [2] Playlist", 'cyan'))
-    print(colored("        [3] Single Content", 'cyan'))
-    print(colored("        [4] Check Previous", 'cyan'))
+    print(colored("        [i] What would you like to do ?", 'blue'))
+    print(colored("        [1] Channel download", 'cyan'))
+    print(colored("        [2] Playlist download", 'cyan'))
+    print(colored("        [3] Single Content download", 'cyan'))
+    print(colored("        [4] Check Previous downloads", 'cyan'))
+    print(colored("        [5] Check PInternet Speed", 'cyan'))
     choice: str = input(colored("        [~] Choose an option: ", 'yellow')).strip()
     if choice == '1':
         api_key, channel_id, channel_name = handle_channel_input(log)
         save_log(log)
         download_channel(api_key, channel_id, channel_name)
+        return 0
     elif choice == '2':
         playlist_url: str = input(colored("        [~] Enter playlist URL or ID: ", 'yellow')).strip()
         normalized_url: str = normalize_playlist_url(playlist_url)
         playlist_title: str = handle_playlist_input(log, normalized_url)
         save_log(log)
         download_playlist_videos(normalized_url)
+        return 0
     elif choice == '3':
         single_content_url: str = input(colored("        [~] Enter single content URL or ID: ", 'yellow')).strip()
         normalized_url: str = normalize_video_url(single_content_url)
         video_title: str = handle_single_content_input(log, normalized_url)
         save_log(log)
         download_single_video(normalized_url)
+        return 0
     elif choice == '4':
         check_previous_downloads(log)
+        return 0
+    elif choice == '5':
+        speed_test()
+        return 0
+    return 9
 def handle_channel_input(log: Dict[str, Any]) -> Tuple[str, str, str]:
     if 'api_keys' in log and log['api_keys']:
         api_key: str = select_api_key(log)
@@ -627,7 +733,10 @@ def main() -> None:
     while True:
         try:
             banner()
-            start_u_ydt()
+            x = start_u_ydt()
+            if x == 9:
+                input(colored("\n        [!] Wrong input, why ? press enter to continue", 'red'))
+                continue
         except Exception as e:
             input(colored(f"\n        [!] Error Occurred, Details: {e}", 'red'))
         except KeyboardInterrupt:
